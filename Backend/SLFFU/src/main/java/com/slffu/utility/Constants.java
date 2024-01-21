@@ -9,7 +9,7 @@ public class Constants {
     public static final String CFL = "CFL";
     public static final String FLO = "FLO";
 
-    public static final String CONFIG_YAML_PATH = "src/main/resources/config.yaml";
+    public static final String CONFIG_YAML_PATH = "Backend/SLFFU/src/main/resources/config.yaml";
 
     // numbers
     public static long LONG_ZERO = 0;
