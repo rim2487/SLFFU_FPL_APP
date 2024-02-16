@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.slffu.utility.ConfigReader;
 import com.slffu.utility.Constants;
@@ -20,31 +21,34 @@ public class LeagueDataHandler implements LeagueDataHandlerI {
     private static final Logger logger = LogManager.getLogger();
 
     @Override
-    public long getLeagueCode(String leagueType) {
-        long leagueCode;
+    public ResponseEntity<Long> getLeagueCode(String leagueType) {
         ConfigDAO configDAO = ConfigReader.readConfig();
         try {
-            switch (leagueType) {
-                case Constants.PFL:
-                    return configDAO.getLeagueCodes().getPfl();
-                case Constants.CFL:
-                    return configDAO.getLeagueCodes().getCfl();
-                case Constants.FLO:
-                    return configDAO.getLeagueCodes().getFlo();
-                default:
-                    logger.error("League type does not match!");
+            if (configDAO != null) {
+                return switch (leagueType) {
+                    case Constants.PFL -> ResponseEntity.ok(configDAO.getLeagueCodes().getPfl());
+                    case Constants.CFL -> ResponseEntity.ok(configDAO.getLeagueCodes().getCfl());
+                    case Constants.FLO -> ResponseEntity.ok(configDAO.getLeagueCodes().getFlo());
+                    default -> {
+                        logger.error("League type does not match!");
+                        yield ResponseEntity.ok(Constants.LONG_ZERO);
+                    }
+                };
+            } else {
+                logger.error("ConfigDAO is null!");
+                return ResponseEntity.ok(Constants.LONG_ZERO);
             }
         } catch (Exception e) {
             logger.error("Error fetching league data: ", e);
+            return ResponseEntity.badRequest().build();
         }
-        return Constants.LONG_ZERO;
     }
 
     @Override
-    public String getDataForLeagues(long leagueCode) {
+    public ResponseEntity<String> getDataForLeagues(long leagueCode) {
         JSONArray leagueData;
         try {
-            String requestUrl = "https://fantasy.premierleague.com/api/leagues-classic/" + leagueCode + "/standings/";
+            String requestUrl = Constants.FANTASY_API_REQUEST_URL + leagueCode + "/" + Constants.STANDINGS + "/";
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI(requestUrl))
@@ -52,12 +56,12 @@ public class LeagueDataHandler implements LeagueDataHandlerI {
                     .build();
 
             HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-            leagueData = new JSONObject(response.body()).getJSONObject("standings").getJSONArray("results");
-            return leagueData.toString();
+            leagueData = new JSONObject(response.body()).getJSONObject(Constants.STANDINGS).getJSONArray(Constants.RESULTS);
+            return ResponseEntity.ok(leagueData.toString());
         } catch (Exception e) {
             logger.error("Cannot get data for leagues. league code : " + leagueCode, e);
+            return ResponseEntity.badRequest().build();
         }
-        return Constants.EMPTY_STRING;
     }
 
 }
