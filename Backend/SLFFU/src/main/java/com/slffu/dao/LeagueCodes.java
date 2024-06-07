@@ -2,31 +2,31 @@ package com.slffu.dao;
 
 public class LeagueCodes {
 
-    private long pfl;
-    private long cfl;
-    private long flo;
+    private long PFL;
+    private long CFL;
+    private long FLO;
 
     public long getPfl() {
-        return pfl;
+        return PFL;
     }
 
     public void setPfl(long pfl) {
-        this.pfl = pfl;
+        this.PFL = pfl;
     }
 
     public long getCfl() {
-        return cfl;
+        return CFL;
     }
 
     public void setCfl(long cfl) {
-        this.cfl = cfl;
+        this.CFL = cfl;
     }
 
     public long getFlo() {
-        return flo;
+        return FLO;
     }
 
     public void setFlo(long flo) {
-        this.flo = flo;
+        this.FLO = flo;
     }
 }

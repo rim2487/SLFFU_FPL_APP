@@ -1,14 +1,14 @@
 package com.slffu.services;
 
 import com.slffu.dao.ConfigDAO;
+import com.slffu.utility.ConfigReader;
+import com.slffu.utility.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import com.slffu.utility.ConfigReader;
-import com.slffu.utility.Constants;
 
 import java.net.URI;
 import java.net.http.HttpClient;
