@@ -1,7 +1,10 @@
 package com.slffu.services;
 
+import org.springframework.http.ResponseEntity;
+
 public interface LeagueDataHandlerI {
-    long getLeagueCode(String leagueType);
-    String getDataForLeagues(long leagueCode);
+
+    ResponseEntity<Long> getLeagueCode(String leagueType);
+    ResponseEntity<String> getDataForLeagues(long leagueCode);
 
 }
