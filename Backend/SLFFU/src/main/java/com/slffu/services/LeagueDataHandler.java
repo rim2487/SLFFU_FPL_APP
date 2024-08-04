@@ -57,6 +57,14 @@ public class LeagueDataHandler implements LeagueDataHandlerI {
 
             HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
             leagueData = new JSONObject(response.body()).getJSONObject(Constants.STANDINGS).getJSONArray(Constants.RESULTS);
+
+            /*
+            to get the data before the season starts. JSON structure is different. leagueData will be empty before the season
+             */
+            if (leagueData.isEmpty()) {
+                leagueData = new JSONObject(response.body()).getJSONObject(Constants.NEW_ENTRIES).getJSONArray(Constants.RESULTS);
+            }
+
             return ResponseEntity.ok(leagueData.toString());
         } catch (Exception e) {
             logger.error("Cannot get data for leagues. league code : " + leagueCode, e);
